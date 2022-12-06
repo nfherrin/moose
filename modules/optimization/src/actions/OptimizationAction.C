@@ -16,6 +16,7 @@
 registerMooseAction("OptimizationApp", OptimizationAction, "auto_create_mesh");
 registerMooseAction("OptimizationApp", OptimizationAction, "auto_create_problem");
 registerMooseAction("OptimizationApp", OptimizationAction, "auto_create_executioner");
+registerMooseAction("OptimizationApp", OptimizationAction, "MaterialSwapOpt");
 
 InputParameters
 OptimizationAction::validParams()
@@ -31,6 +32,7 @@ OptimizationAction::validParams()
       "auto_create_problem",
       true,
       "Automatically setup the Problem block for a master application without a simulation.");
+  params.addParam<std::string>("optimization_type", "MatchOpt", "Optimization Problem Type");
   return params;
 }
 
@@ -79,4 +81,12 @@ OptimizationAction::act()
     // Add Action to the warehouse
     _awh.addActionBlock(action);
   }
+
+  //[Optimization type]
+  if (getParam<std::string>("optimization_type") == "MaterialSwapOpt")
+  {
+    // Build the Action parameters
+    InputParameters action_params = _action_factory.getValidParams("MaterialSwapOptAction");
+  }
+  mooseError("ending here");
 }
